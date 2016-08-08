@@ -1,0 +1,25 @@
+#!/bin/bash
+
+
+ps | grep -q ngrok
+STATUS=$?
+case $1 in
+	start)	
+		[ $STATUS -eq '0' ] || (ngrok http 80 > /dev/null & sleep 2)
+		ngrok_url=$(curl http://127.0.0.1:4040/api/tunnels 2>/dev/null| jq -r '.tunnels[]|select(.proto == "https")|.public_url')
+		echo "$ngrok_url"
+		;;
+	stop)
+		ngrok_url=$(curl http://127.0.0.1:4040/api/tunnels 2>/dev/null| jq -r '.tunnels[]|select(.proto == "https")|.public_url')
+		pkill -x ngrok
+		[ $? -eq '0' ] && echo "ngrok killed"
+		;;
+	status)
+		ngrok_url=$(curl http://127.0.0.1:4040/api/tunnels 2>/dev/null| jq -r '.tunnels[]|select(.proto == "https")|.public_url')
+		echo "$ngrok_url"
+		;;
+
+	*)
+		echo "usage: $0 <start|stop>"
+		;;
+esac

@@ -8,6 +8,22 @@
 # the init scripts break if we just go pkilling the webcamd. This is a bit
 # gentler
 #
+# It is a drop-in replacement for /home/pi/scripts/webcam and obviates /home/pi/scripts/webcamDaemon
+# because OctoPi takes care of that in /etc/init.d
+#
+# For completeness, put the following block in the system: actions: section of /home/pi/.octoprint/config.yaml
+# and uncomment it
+#   - action: streamon
+#     command: /home/pi/scripts/webcam start
+#     confirm: false
+#     name: Start video stream
+#   - action: streamoff
+#     command: /home/pi/scripts/webcam stop
+#     confirm: false
+#     name: Stop video stream
+#
+# make sure you make this script executable (chmod 755 /home/pi/scripts/webcam)
+#
 
 case "$1" in
     start)

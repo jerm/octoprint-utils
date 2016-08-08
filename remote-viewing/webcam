@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Start / stop streamer daemon
+#
+# This is a modified version of the webcam script from
+# https://github.com/foosel/OctoPrint/wiki/Setup-on-a-Raspberry-Pi-running-Raspbian
+# that will work on OctoPi. OctoPi has things installed a bit differently and
+# the init scripts break if we just go pkilling the webcamd. This is a bit
+# gentler
+#
+
+case "$1" in
+    start)
+        sudo /etc/init.d/webcamd start >/dev/null 2>&1 &
+        echo "$0: started"
+        ;;
+    stop)
+        sudo /etc/init.d/webcamd stop
+        pkill -x mjpg_streamer
+        echo "$0: stopped"
+        ;;
+    *)
+        echo "Usage: $0 {start|stop}" >&2
+        ;;
+esac

@@ -18,43 +18,43 @@ ps | grep -v grep |grep -q ngrok
 STATUS=$?
 [ $STATUS -eq '0' ] && ngrok_url=$(get_ngrok_url)
 case $1 in
-	start)
+    start)
         if [ $STATUS -eq '0' ]; then
             echo "Ngrok Session already running at: $ngrok_url"
         else
             ngrok $NGROK_OPTIONS > /dev/null & sleep 2
             ngrok_url=$(get_ngrok_url)
-		    echo "New Ngrok sesion: $ngrok_url"
+            echo "New Ngrok sesion: $ngrok_url"
         fi
-		;;
-	stop)
+        ;;
+    stop)
         if [ $STATUS -eq '0' ]
         then
-		    pkill -x ngrok
-		    [ $? -eq '0' ] && echo "ngrok session: $ngrok_url -- Killed"
+            pkill -x ngrok
+            [ $? -eq '0' ] && echo "ngrok session: $ngrok_url -- Killed"
         else
             echo 'No ngrok session to kill. Success?'
         fi
-		;;
-	restart)
+        ;;
+    restart)
         if [ $STATUS -eq '0' ]; then
-		    pkill -x ngrok
+            pkill -x ngrok
             [ $? -eq '0' ] && echo "ngrok session: $ngrok_url -- Killed"
         else
             echo "No current ngrok session to kill"
         fi
         ngrok $NGROK_OPTIONS > /dev/null & sleep 2
         ngrok_url=$(get_ngrok_url)
-		echo "New ngrok session: $ngrok_url"
-		;;
-	status)
+        echo "New ngrok session: $ngrok_url"
+        ;;
+    status)
         if [ $STATUS -eq '0' ]; then
-		    echo "Current ngrok session: $ngrok_url"
+            echo "Current ngrok session: $ngrok_url"
         else
             echo "No current ngrok session"
         fi
         ;;
-	*)
-		echo "usage: $0 <start|stop|restart|status>"
-		;;
+    *)
+        echo "usage: $0 <start|stop|restart|status>"
+        ;;
 esac

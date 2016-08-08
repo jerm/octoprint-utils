@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# We require slackcli to be installed, we install it
+
+# OCTOPI USERS, NOTE: you'll need to activate your octopi virtualenv before
+# running this from the command line/installing slackcli because octopi wrapt
+# git in a "no sudo" wrapper, so we can't install it globally
+# source ~/oprint/bin/activate
+
+which slackcli > /dev/null || pip install git+https://github.com/jerm/slackcli.git#egg=slackcli || exit 1
+
+# Comment these if you have them defined/exported in your shell
+SLACK_USERNAME="`hostname`"
+SLACK_TOKEN="{{slack_token}}"
+SLACK_CHANNEL="{{slack_channel}}"
+SLACK_ICON_URL="{{slack_icon_url}}"
+
+# Grab text from command line
+[ -n "$1" ] && thing_to_say="$1" && slackcli -t "$SLACK_TOKEN" -c "$SLACK_CHANNEL" -i "$SLACK_ICON_URL" -u "$SLACK_USERNAME" "$thing_to_say"
+
+# Otherwise, get it from STDIN
+if [ -z "$thing_to_say" ];
+then
+    while read thing_to_say
+    do
+        [ -n "$thing_to_say" ] && slackcli -t "$SLACK_TOKEN" -c "$SLACK_CHANNEL" -i "$SLACK_ICON_URL" -u "$SLACK_USERNAME" "$thing_to_say"
+    done
+fi
